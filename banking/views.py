@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import UserAccount
-
+from .models import UserAccount, BankDetails
+import random
 # Create your views here.
 
 def signup(request):
+    # banks = BankDetails.objects.all()
+    # data = {
+    #     'banks':banks
+    # }
+    account_no = int(''.join(str(random.randint(0,9)) for _ in range(11)))
     if request.POST:
-        print(request.POST)
         fname       = request.POST.get('fname',False)
         lname       = request.POST.get('lname',False)
         username    = request.POST.get('username',False)
@@ -21,17 +25,13 @@ def signup(request):
         bank        = request.POST.get('bank')
         UserAccount.objects.create(user_id=user.id,phone=phone,dob=dob,address=address,bank=bank)
         return redirect(home)
-    return render(request,'signup.html',{})
+    return render(request,'signup.html',data)
 
 def home(request):
     if request.POST:
-        print(request.POST)
         username       = request.POST.get('username',False)
         password       = request.POST.get('password',False)
-        print(username)
-        print(password)
         user = authenticate(username=username, password=password)
-        print(user)
         if user is not None:
             # A backend authenticated the credentials
             login(request, user)
@@ -55,7 +55,7 @@ def transactions(request):
         return redirect(home)
     return render(request,'transactions.html',{})
 
-def user_logout():
+def user_logout(request):
     logout(request)
     return redirect(home)
 

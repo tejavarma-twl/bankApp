@@ -20,6 +20,7 @@ from banking.views import *
 urlpatterns = [
     path('',home),
     path('signup',signup),
+    path('logout',user_logout),
     path('dashboard',dashboard),
     path('admin/', admin.site.urls),
 ]
